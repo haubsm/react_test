@@ -21,6 +21,7 @@ const SignIn = dynamic(() => import('./pages/SignIn'))
 const Movies = dynamic(() => import('./pages/Movies'))
 const MovieDetails = dynamic(() => import('./pages/MovieDetails'))
 const NotFound = dynamic(() => import('./pages/NotFound'))
+const Todos = dynamic(() => import('./pages/Todo'))
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
             element: <MovieDetails />
           }
         ]
+      },
+      {
+        path: '/todos',
+        element: <Todos />
       },
       {
         path: '*',
