@@ -1,6 +1,7 @@
 import { useTodoStore } from '@/stores/todo'
 import { useEffect } from 'react'
 import Loader from '../Loader'
+import TodoItem from './TodoItem'
 
 export default function TodoList() {
   const todos = useTodoStore(s => s.todos)
@@ -14,7 +15,10 @@ export default function TodoList() {
   return (
     <>
       {todos.map(todo => (
-        <div key={todo.id}>{todo.title}</div>
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+        />
       ))}
       {isLoading && <Loader />}
     </>

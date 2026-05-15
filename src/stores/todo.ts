@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { combine } from 'zustand/middleware'
 import axios from 'axios'
 
-interface Todo {
+export interface Todo {
   id: string // 할 일 ID
   order: number // 할 일 순서
   title: string // 할 일 제목
@@ -10,6 +10,8 @@ interface Todo {
   createdAt: string // 할 일 생성일
   updatedAt: string // 할 일 수정일
 }
+
+export type FilterStatus = 'all' | 'done' | 'todo'
 
 const customAxios = axios.create({
   baseURL: 'https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos',
@@ -23,6 +25,8 @@ const customAxios = axios.create({
 export const useTodoStore = create(
   combine(
     {
+      filterStatus: 'all' as FilterStatus,
+      filteredTodos: [] as Todo[],
       todos: [] as Todo[],
       title: '',
       isLoadingForCreate: false,
@@ -60,7 +64,18 @@ export const useTodoStore = create(
           set({ isLoadingForCreate: false })
         }
       }
-      return { setTitle, fetchTodos, createTodo }
+      async function updateTodo(todo: Todo) {
+        await customAxios.put(`/${todo.id}`, {
+          title: todo.title,
+          done: todo.done
+        })
+        fetchTodos()
+      }
+      async function deleteTodo(todo: Todo) {
+        await customAxios.delete(`/${todo.id}`)
+        fetchTodos()
+      }
+      return { setTitle, fetchTodos, createTodo, updateTodo, deleteTodo }
     }
   )
 )
